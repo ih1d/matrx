@@ -1,0 +1,22 @@
+cabal-version:      2.4
+name:               matrx
+version:            0.0.0.1
+synopsis:           Purely functional matrices
+-- description:
+homepage:           https://github.com/isaac025/matrx
+-- bug-reports:
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             Isaac Hiram Lopez Diaz
+maintainer:         isaac.lopez@upr.edu
+-- copyright:
+category:           Data
+extra-source-files: CHANGELOG.md
+
+library
+    exposed-modules:  Data.Matrix
+    -- other-modules:
+    -- other-extensions:
+    build-depends:    base ^>=4.15.1.0
+    hs-source-dirs:   src
+    default-language: Haskell2010
