@@ -2,12 +2,9 @@ name: Haskell CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
-
-permissions:
-  contents: read
+    branches: [ main ]
 
 jobs:
   build:
@@ -15,14 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-haskell@v1
-      with:
-        ghc-version: 'latest'
-        cabal-version: 'latest'
-
+    - uses: actions/checkout@v2
+    - uses: haskell/actions/setup@v1.2
     - name: Cache
-      uses: actions/cache@v3
+      uses: actions/cache@v1
       env:
         cache-name: cache-cabal
       with:
@@ -36,4 +29,4 @@ jobs:
     - name: Install dependencies
       run: |
         cabal update
-        cabal build --only-dependencies --enable-tests --enable-benchmarks
+        cabal build --only-dependencies 
