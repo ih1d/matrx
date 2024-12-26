@@ -21,6 +21,13 @@ data Matrix a = Matrix
     , elems :: Num a => [[a]]
     }
 
+instance (Num a, Eq a) => Semigroup (Matrix a) where
+    (<>) = multiplication
+
+instance Monoid (Matrix a) where
+    mempty = mempty
+    mappend = undefined
+
 {- Matrix Creation -}
 -- | empty matrix construction
 empty :: Matrix a
@@ -58,18 +65,6 @@ transpose (Matrix r c elems) =
                     then res ++ [hds]
                     else transposeIter tls (res ++ [hds])
 
-{- | addition
-addition :: Matrix a -> Matrix a -> Matrix a
-addition = undefined
-
--- | scalar-matrix mult
-scalarMult :: Num a => a -> Matrix a -> Matrix a
-scalarMult = undefined
-
--- | matrix-matrix mult
-multiplication :: Matrix a -> Matrix a -> Matrix a
-multiplication = undefined
--}
 -- vector dot product
 vdot :: Num a => Matrix a -> Matrix a -> a
 vdot (Matrix r1 c1 v1) (Matrix r2 c2 v2) =
@@ -118,3 +113,25 @@ saxpy (Matrix r1 c1 v1) (Matrix r2 c2 v2) alpha =
                         yi = (y !! 0) !! i
                         yi' = yi + a * xi
                      in loop x y n a (i+1) (res ++ [yi'])
+
+multiplication :: (Eq a, Num a) => Matrix a -> Matrix a -> Matrix a
+multiplication (Matrix r1 c1 m1) (Matrix r2 c2 m2) =
+    if c1 /= r2
+        then error "Matrix multiplication requires both matrices to have same dimension"
+        else do
+                let result = loop m1 m2 r1 0 0 []
+                matrix r1 c2 result
+    where
+        loop a b m i j res =
+            if i == m
+                then res
+                else
+                    if j == m
+                        then loop a b m (i+1) 0 res
+                        else
+                            let ai = a !! i
+                                bj = map (!!j) b
+                                c = sum $ zipWith (*) ai bj
+                             in loop a b m i (j+1) (res ++ [c])
+
+
