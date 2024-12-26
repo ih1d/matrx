@@ -24,10 +24,6 @@ data Matrix a = Matrix
 instance (Num a, Eq a) => Semigroup (Matrix a) where
     (<>) = multiplication
 
-instance Monoid (Matrix a) where
-    mempty = mempty
-    mappend = undefined
-
 {- Matrix Creation -}
 -- | empty matrix construction
 empty :: Matrix a
@@ -135,3 +131,16 @@ multiplication (Matrix r1 c1 m1) (Matrix r2 c2 m2) =
                              in loop a b m i (j+1) (res ++ [c])
 
 
+-- | n :\ Matrix gives rows
+(\\) :: Num a => Int -> Matrix a -> Matrix a
+n \\ (Matrix r _ m) = 
+    if n > r 
+        then error "Row slice is greater than row size"
+        else matrix r 1 (m !! n)
+
+-- | Matrix \: n gives columns
+(//) :: Num a => Matrix a -> Int -> Matrix a
+(Matrix _ c m) // n =
+    if n > c
+        then error "Column slice is greater than column size"
+        else matrix 1 c (map (!!n) m)
