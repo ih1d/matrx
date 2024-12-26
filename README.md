@@ -1,5 +1,6 @@
 # Purely Functional Matrices*
 Native Haskell tensor library.
+
 <sup><sub>* This will be moved to tensors eventually</sup></sub>
 
 ## No concern for alternative syntax
