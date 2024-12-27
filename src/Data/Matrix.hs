@@ -1,4 +1,9 @@
-{- Module      : Data.Matrix
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE MultiWayIf #-}
+
+-- |
+-- Module      : Data.Matrix
 -- Copyright   : (c) Isaac H. Lopez Diaz 2024
 -- License     : BSD-style
 --
@@ -7,10 +12,6 @@
 -- Portability : non-portable
 -- 
 -- Native matrices
--}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE MultiWayIf #-}
 
 module Data.Matrix where
 
@@ -20,9 +21,6 @@ data Matrix a = Matrix
     , col :: Int 
     , elems :: Num a => [[a]]
     }
-
-instance (Num a, Eq a) => Semigroup (Matrix a) where
-    (<>) = multiplication
 
 {- Matrix Creation -}
 -- | empty matrix construction
@@ -110,6 +108,42 @@ saxpy (Matrix r1 c1 v1) (Matrix r2 c2 v2) alpha =
                         yi' = yi + a * xi
                      in loop x y n a (i+1) (res ++ [yi'])
 
+-- | Matrix addition
+addition :: Num a => Matrix a -> Matrix a -> Matrix a
+addition (Matrix m n m1) (Matrix v w m2) =
+    if m /= v || n /= w 
+        then error "Matrix addition requires both matrices to have same dimension"
+        else
+            let result = loop m1 m2 m 0 []
+             in Matrix m n result
+    where
+        loop a b n i res =
+            if i == n
+                then res
+                else
+                    let ai = a !! i
+                        bi = b !! i
+                        c = zipWith (+) ai bi
+                     in loop a b n (i+1) (res ++ [c])
+-- | Matrix addition
+subtraction :: Num a => Matrix a -> Matrix a -> Matrix a
+subtraction (Matrix m n m1) (Matrix v w m2) =
+    if m /= v || n /= w 
+        then error "Matrix addition requires both matrices to have same dimension"
+        else
+            let result = loop m1 m2 m 0 []
+             in Matrix m n result
+    where
+        loop a b n i res =
+            if i == n
+                then res
+                else
+                    let ai = a !! i
+                        bi = b !! i
+                        c = zipWith (-) ai bi
+                     in loop a b n (i+1) (res ++ [c])
+
+-- | Matrix multiplication
 multiplication :: (Eq a, Num a) => Matrix a -> Matrix a -> Matrix a
 multiplication (Matrix r1 c1 m1) (Matrix r2 c2 m2) =
     if c1 /= r2
