@@ -1,9 +1,9 @@
 cabal-version:      2.4
-name:               matrx
+name:               neo
 version:            0.0.0.1
-synopsis:           Purely functional matrices
+synopsis:           Efficient matrix library
 -- description:
-homepage:           https://github.com/isaac025/matrx
+homepage:           https://github.com/ih1d/neo
 -- bug-reports:
 license:            BSD-3-Clause
 license-file:       LICENSE
@@ -14,7 +14,10 @@ category:           Data
 extra-source-files: CHANGELOG.md
 
 library
-    exposed-modules:  Data.Matrix
+    exposed-modules:  
+        Data.Matrix
+        Data.Matrix.Class
+        Data.Matrix.Internal
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.15.1.0
