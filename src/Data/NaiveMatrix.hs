@@ -16,10 +16,10 @@
 module Data.NaiveMatrix where
 
 -- Matrix data structure
-data Matrix t a = Matrix 
+data Matrix a = Matrix 
     { row :: Int 
     , col :: Int 
-    , elems :: (Eq a, Traversable t) => t (t a)
+    , elems :: (Num a) => [[a]]
     }
 
 {- Matrix Creation -}
@@ -59,7 +59,7 @@ transpose (Matrix r c elems) =
                     else transposeIter tls (res ++ [hds])
 
 -- vector dot product
-vdot :: Num a => Matrix a -> Matrix a -> a
+vdot :: (Eq a, Num a) => Matrix a -> Matrix a -> a
 vdot (Matrix r1 c1 v1) (Matrix r2 c2 v2) =
     if 
         | c1 == 1 && c2 == 1 -> 
@@ -108,7 +108,7 @@ saxpy (Matrix r1 c1 v1) (Matrix r2 c2 v2) alpha =
                      in loop x y n a (i+1) (res ++ [yi'])
 
 -- | Matrix addition
-addition :: Num a => Matrix a -> Matrix a -> Matrix a
+addition :: (Eq a, Num a) => Matrix a -> Matrix a -> Matrix a
 addition (Matrix m n m1) (Matrix v w m2) =
     if m /= v || n /= w 
         then error "Matrix addition requires both matrices to have same dimension"
@@ -125,7 +125,7 @@ addition (Matrix m n m1) (Matrix v w m2) =
                         c = zipWith (+) ai bi
                      in loop a b n (i+1) (res ++ [c])
 -- | Matrix addition
-subtraction :: Num a => Matrix a -> Matrix a -> Matrix a
+subtraction :: (Eq a, Num a) => Matrix a -> Matrix a -> Matrix a
 subtraction (Matrix m n m1) (Matrix v w m2) =
     if m /= v || n /= w 
         then error "Matrix addition requires both matrices to have same dimension"
@@ -165,14 +165,14 @@ multiplication (Matrix r1 c1 m1) (Matrix r2 c2 m2) =
 
 
 -- | n :\ Matrix gives rows
-(\\) :: Num a => Int -> Matrix a -> Matrix a
+(\\) :: (Eq a, Num a) => Int -> Matrix a -> Matrix a
 n \\ (Matrix r _ m) = 
     if n > r 
         then error "Row slice is greater than row size"
         else matrix r 1 (m !! n)
 
 -- | Matrix \: n gives columns
-(//) :: Num a => Matrix a -> Int -> Matrix a
+(//) :: (Eq a, Num a) => Matrix a -> Int -> Matrix a
 (Matrix _ c m) // n =
     if n > c
         then error "Column slice is greater than column size"
