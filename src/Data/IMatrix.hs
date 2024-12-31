@@ -9,12 +9,12 @@
 -- Portability : non-portable
 -- 
 -- Matrix interface
+--
 
-module Data.IMatrix where
+module Data.IMatrix (
+    IMatrix(..)
+) where
 
 class IMatrix m a where
-    rowSlice :: m a -> Int -> m a
-    colSlice :: m a -> Int -> m a
-    index :: m a -> Int -> Int -> a
-    shape :: m a -> (Int, Int)
-    size :: m a -> Int
+    unsafeRowSlice :: m a -> Int -> m a
+    unsafeColSlice :: m a -> Int -> m a
