@@ -12,9 +12,27 @@
 --
 
 module Data.IMatrix (
-    IMatrix(..)
+    IMatrix(..),
+    length,
+    empty,
+    fromList,
+    toList,
 ) where
 
-class IMatrix m a where
-    unsafeRowSlice :: m a -> Int -> m a
-    unsafeColSlice :: m a -> Int -> m a
+import Prelude hiding (length)
+import Data.MMatrix
+
+class IMatrix mx a where
+    mlength :: mx a -> Int
+
+length :: IMatrix mx a => mx a -> Int
+{-# INLINE length #-}
+length mx = mlength mx
+
+empty :: IMatrix mx a => mx a
+{-# INLINE empty #-}
+empty = fromList []
+
+fromList :: IMatrix mx a => [a] -> mx a
+{-# INLINE fromList #-}
+fromList = 
