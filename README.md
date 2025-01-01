@@ -1,5 +1,5 @@
 # Purely Functional Matrices*
-Native Haskell tensor library.
+Native Haskell matrix library.
 
 <sup><sub>* This will be moved to tensors eventually</sup></sub>
 
@@ -17,6 +17,10 @@ transposition, addition, scalar-matrix multiplication, and matrix-matrix
 multiplication, row and column partitioning.
 
 ## Integration with *vector* library
-It is most important that the library works well with already well-defined
+It is important that the library works well with already well-defined
 libraries such as *vector*. That is why no need of transformation between data
-structures is required.
+structures is required. Native transformations are provided:
+```hs
+fromVector :: Vector a -> Matrix a 
+toVector :: Matrix a -> Vector a
+```

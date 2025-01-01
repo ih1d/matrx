@@ -15,11 +15,11 @@ extra-source-files: CHANGELOG.md
 
 library
     exposed-modules:  
-        Data.NaiveMatrix
         Data.Matrix
     other-modules:
         Data.IMatrix
         Data.MMatrix
+        Data.Matrix.Mutable
  
     -- other-extensions:
        
