@@ -64,3 +64,8 @@ rowSlice mx i n = assert (i >= 0 && n >= 0 && i <= n && i+n <= size mx) (unsafeR
 -- | Return column part of the matrix
 colSlice :: MMatrix mx m a => mx a -> Int -> Int -> m (mx a)
 colSlice mx i n = assert (i >= 0 && n >= 0 && i <= n && i+n <= size mx) (unsafeColSlice mx i n)
+
+-- | Create a new matrix from a list
+unlist :: (Monoid a, MMatrix mx m a) => Int -> Int -> [a] -> m (mx a)
+unlist r c xs = undefined
+    
