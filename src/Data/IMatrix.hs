@@ -16,15 +16,13 @@
 
 module Data.IMatrix (
     IMatrix(..),
-    -- creation
-    empty, zeros,
     -- basic ops
     size, shape,
     -- to/from list
     fromList, toList
 ) where
 
-import Data.MMatrix (MMatrix)
+import Data.MMatrix (MMatrix, unlist)
 
 class IMatrix mx a where
     mnew :: (forall mmx m. MMatrix mmx m a => m (mmx a)) -> mx a
@@ -38,18 +36,11 @@ shape :: IMatrix mx a => mx a -> (Int, Int)
 shape = mshape
 
 -- * Matrix Creation 
+fromList :: (Monoid a, IMatrix mx a) => Int -> Int -> [a] -> mx a
+fromList r c xs = mnew (unlist r c xs)
 
--- | empty matrix construction
-empty :: IMatrix mx a => mx a
-empty = fromList [] 
-
--- | zeros creates a matrix of given dimensions with mempty
-zeros :: (Monoid a, IMatrix mx a) => Int -> Int -> mx a
-zeros r c = fromList $ replicate (r*c) mempty
-
-fromList :: IMatrix mx a => [a] -> mx a
-fromList [] = undefined 
-
+toList :: IMatrix mx a => mx a -> [a]
+toList mx = undefined
 {- | Given a row and a column with a list of
 -- elements a matrix data structure is returned.
 -- If the list is empty the zero matrix is returned

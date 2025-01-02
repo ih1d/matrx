@@ -15,6 +15,7 @@ module Data.MMatrix (
     MMatrixPure(..),
     MMatrix(..),
     new, read, write,
+    unlist,
     rowSlice, colSlice,
 ) where
 
@@ -67,5 +68,8 @@ colSlice mx i n = assert (i >= 0 && n >= 0 && i <= n && i+n <= size mx) (unsafeC
 
 -- | Create a new matrix from a list
 unlist :: (Monoid a, MMatrix mx m a) => Int -> Int -> [a] -> m (mx a)
-unlist r c xs = undefined
-    
+unlist r c xs = new r c >>= loop (zip xs [0..])
+    where
+        loop :: (Monoid a, MMatrix mx m a) => [(a,Int)] -> mx a -> m (mx a)
+        loop [] arr = pure arr
+        loop ((x, i):xs) arr = write arr i x >> loop xs arr

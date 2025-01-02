@@ -53,5 +53,3 @@ unsafeNew' (I# r#) (I# c#) =
     ST (\s# -> 
         case newArray# (r# *# c#) mempty s# of
             (# s'#, arr# #) -> (# s'#, Matrix (I# (r# *# c#)) (I# r#) (I# c#) arr# #))
-
-
