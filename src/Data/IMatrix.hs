@@ -28,8 +28,9 @@ class IMatrix mx a where
     mnew :: (forall mmx m. (MMatrix mmx m a) => m (mmx a)) -> mx a
     msize :: mx a -> Int
     mshape :: mx a -> (Int, Int)
-    mtrans :: mx a -> mx a
+    mtrans :: (forall mmx m. (MMatrix mmx m a) => mx a -> m (mmx a)) -> mx a
 
+-- * Matrix dimensions
 size :: (IMatrix mx a) => mx a -> Int
 size = msize
 
@@ -51,25 +52,12 @@ Otherwise matrix is built
 matrix :: (IMatrix mx a) => Int -> Int -> [a] -> mx a
 matrix = fromList
 
-{- | transposition
+-- | transposition
 -- transposes the matrices elements
 transpose :: IMatrix mx a => mx a
-transpose m =
-    let (r, c) = rank m
-     in
-        if r == 1
-            then
-            else (Matrix d c r (transposeIter elems []))
-    where
-        transposeIter xs res =
-            let hds = map head xs
-                tls = map tail xs
-             in
-                if concat tls == []
-                    then res ++ [hds]
-                    else transposeIter tls (res ++ [hds])
+transpose = mtrans
 
--- vector dot product
+{- vector dot product
 dot :: (Eq a, Num a) => Matrix a -> Matrix a -> a
 dot (Matrix _ r1 c1 v1) (Matrix _ r2 c2 v2) =
     if

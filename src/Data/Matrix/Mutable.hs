@@ -52,8 +52,9 @@ instance MMatrix (Matrix s) (ST s) a where
             )
 
     {-# INLINE unsafeRowSlice #-}
-    unsafeRowSlice = undefined
+    unsafeRowSlice = unsafeRowSlice'
 
+    {-# INLINE unsafeColSlice #-}
     unsafeColSlice = undefined
 
 unsafeNew' :: Int -> Int -> a -> ST s (Matrix s a)
@@ -64,3 +65,8 @@ unsafeNew' (I# r#) (I# c#) a =
             case newArray# (r# *# c#) a s# of
                 (# s'#, arr# #) -> (# s'#, Matrix (I# (r# *# c#)) (I# r#) (I# c#) arr# #)
         )
+
+
+unsafeRowSlice :: Matrix a -> Int -> Int -> ST s (Matrix s a)
+{-# INLINE unsafeRowSlice #-} 
+unsafeRowSlice' mat i n = undefined
