@@ -38,6 +38,15 @@ class MMatrixPure mx a where
     -- | size of columns
     colLength :: mx a -> Int
 
+    -- | slice rows from starting idx to some idx
+    unsafeRowSlice :: mx a -> Int -> Int -> mx a
+
+    -- | slice cols from starting idx to some idx
+    unsafeColSlice :: mx a -> Int -> Int -> mx a
+
+    -- | transpose a matrix
+    unsafeTrans :: mx a -> mx a
+
 class (Monad m, MMatrixPure mx a) => MMatrix mx m a where
     -- | Create a new matrix of a given dimension
     unsafeNew :: Int -> Int -> a -> m (mx a)
@@ -47,15 +56,6 @@ class (Monad m, MMatrixPure mx a) => MMatrix mx m a where
 
     -- | Replace element at given position
     unsafeWrite :: mx a -> Int -> a -> m ()
-
-    -- | slice rows from starting idx to some idx
-    unsafeRowSlice :: mx a -> Int -> Int -> m (mx a)
-
-    -- | slice cols from starting idx to some idx
-    unsafeColSlice :: mx a -> Int -> Int -> m (mx a)
-
-    -- | transpose a matrix
-    unsafeTrans :: mx a -> m (mx a)
 
 -- | Test that index given is valid
 inBounds :: (MMatrixPure mx a) => mx a -> Int -> Bool
@@ -71,12 +71,16 @@ write :: (MMatrix mx m a) => mx a -> Int -> a -> m ()
 write mx i a = assert (inBounds mx i) $ unsafeWrite mx i a
 
 -- | Return row part of the matrix
-rowSlice :: (MMatrix mx m a) => mx a -> Int -> Int -> m (mx a)
+rowSlice :: (MMatrixPure mx a) => mx a -> Int -> Int -> mx a
 rowSlice mx i n = assert (i >= 0 && n >= 0 && i <= n && i + n <= size mx) (unsafeRowSlice mx i n)
 
 -- | Return column part of the matrix
-colSlice :: (MMatrix mx m a) => mx a -> Int -> Int -> m (mx a)
+colSlice :: (MMatrixPure mx a) => mx a -> Int -> Int -> mx a
 colSlice mx i n = assert (i >= 0 && n >= 0 && i <= n && i + n <= size mx) (unsafeColSlice mx i n)
+
+-- | Transpose a matrix
+trans :: (MMatrixPure mx a) => mx a -> mx a
+trans = unsafeTrans
 
 -- | Create a new matrix from a list
 unlist :: (MMatrix mx m a) => Int -> Int -> [a] -> m (mx a)
@@ -86,7 +90,3 @@ unlist r c (x : xs) = new r c x >>= loop (zip xs [0 ..])
     loop :: (MMatrix mx m a) => [(a, Int)] -> mx a -> m (mx a)
     loop [] arr = pure arr
     loop ((x, i) : xs) arr = write arr i x >> loop xs arr
-
--- | transpose a matrix
-trans :: (MMatrix mx m a) => mx a -> m (mx a)
-trans = unsafeTrans

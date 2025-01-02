@@ -28,7 +28,7 @@ class IMatrix mx a where
     mnew :: (forall mmx m. (MMatrix mmx m a) => m (mmx a)) -> mx a
     msize :: mx a -> Int
     mshape :: mx a -> (Int, Int)
-    mtrans :: (forall mmx m. (MMatrix mmx m a) => mx a -> m (mmx a)) -> mx a
+    mtrans :: mx a -> mx a
 
 -- * Matrix dimensions
 size :: (IMatrix mx a) => mx a -> Int
@@ -52,9 +52,10 @@ Otherwise matrix is built
 matrix :: (IMatrix mx a) => Int -> Int -> [a] -> mx a
 matrix = fromList
 
--- | transposition
--- transposes the matrices elements
-transpose :: IMatrix mx a => mx a
+{- | transposition
+transposes the matrices elements
+-}
+transpose :: (IMatrix mx a) => mx a -> mx a
 transpose = mtrans
 
 {- vector dot product
@@ -161,7 +162,6 @@ mul (Matrix _ r1 c1 m1) (Matrix _ r2 c2 m2) =
                                 bj = map (!!j) b
                                 c = sum $ zipWith (*) ai bj
                              in loop a b m i (j+1) (res ++ [c])
-
 
 -- | n \\ Matrix gives rows
 (\\) :: (Eq a, Num a) => Int -> Matrix a -> Matrix a

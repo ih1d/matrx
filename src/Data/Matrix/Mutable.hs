@@ -35,6 +35,12 @@ instance MMatrixPure (Matrix s) a where
     size (Matrix d _ _ _) = d
     rowLength (Matrix _ r _ _) = r
     colLength (Matrix _ _ c _) = c
+    {-# INLINE unsafeRowSlice #-}
+    unsafeRowSlice = undefined
+    {-# INLINE unsafeColSlice #-}
+    unsafeColSlice = undefined
+    {-# INLINE unsafeTrans #-}
+    unsafeTrans (Matrix d r c arr#) = undefined
 
 instance MMatrix (Matrix s) (ST s) a where
     {-# INLINE unsafeNew #-}
@@ -51,12 +57,6 @@ instance MMatrix (Matrix s) (ST s) a where
                     s2# -> (# s2#, () #)
             )
 
-    {-# INLINE unsafeRowSlice #-}
-    unsafeRowSlice = unsafeRowSlice'
-
-    {-# INLINE unsafeColSlice #-}
-    unsafeColSlice = undefined
-
 unsafeNew' :: Int -> Int -> a -> ST s (Matrix s a)
 {-# INLINE unsafeNew' #-}
 unsafeNew' (I# r#) (I# c#) a =
@@ -65,8 +65,3 @@ unsafeNew' (I# r#) (I# c#) a =
             case newArray# (r# *# c#) a s# of
                 (# s'#, arr# #) -> (# s'#, Matrix (I# (r# *# c#)) (I# r#) (I# c#) arr# #)
         )
-
-
-unsafeRowSlice :: Matrix a -> Int -> Int -> ST s (Matrix s a)
-{-# INLINE unsafeRowSlice #-} 
-unsafeRowSlice' mat i n = undefined
