@@ -36,7 +36,8 @@ instance MMatrixPure (Matrix s) a where
     rowLength (Matrix _ r _ _) = r
     colLength (Matrix _ _ c _) = c
     {-# INLINE unsafeRowSlice #-}
-    unsafeRowSlice = undefined
+    unsafeRowSlice (Matrix d r c arr#) i j = Matrix d (i * j + r) c arr#
+
     {-# INLINE unsafeColSlice #-}
     unsafeColSlice = undefined
     {-# INLINE unsafeTrans #-}

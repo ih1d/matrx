@@ -37,7 +37,7 @@ data Matrix a
         -- | col size
         (Array# a)
 
-instance (Monoid a) => IMatrix Matrix a where
+instance IMatrix Matrix a where
     {-# INLINE mnew #-}
     mnew init =
         runST

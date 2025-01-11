@@ -17,6 +17,8 @@ module Data.IMatrix (
     -- basic ops
     size,
     shape,
+    -- Construction
+    matrix,
     -- to/from list
     fromList,
     toList,
